@@ -1,5 +1,9 @@
 <div align="center">
+<<<<<<< HEAD
   <img src="/home/user/chatapp/src/assets/ChatLogo.svg" alt="Decentralized Chat App Logo" width="100">  
+=======
+  <img src="https://i.ibb.co/r4hyX78/Chat-Logo-bc.png" alt="Decentralized Chat App Logo" width="100">  
+>>>>>>> df74824 (Updated Readme)
 </div>
 
 <h1 align="center">Blockchain Based Messaging Application</h1>
