@@ -14,7 +14,9 @@
             <button  description="search here" aria-label="search here" type="submit" description-position="top" ><i class="fas fa-search"></i> </button>
             <input type="text" class="search_text" placeholder="search...">
           </div>
-          <FriendInfo />
+          <div class="features">
+            <FeatureCard></FeatureCard>
+          </div>
         </div>
         <div class="float-parent2">
           <div v-if="!userShown" class="float-child2">
@@ -65,7 +67,7 @@
               </button>
             </div>
             <div class="allUsers" v-if="userShown" v-for="(user,index) in testData" :key="index">
-              <infoCards :username="user.name" :useraddress="user.accountAddress"/>
+              <infoCards @close-users="closeUsers" :username="user.name" :useraddress="user.accountAddress"/>
             </div>
           </div>
         </div>
@@ -76,10 +78,12 @@
 import { onMounted, ref } from 'vue'
 import NavBar from '../components/NavBar.vue';
 import infoCards from '../components/infoCards.vue';
+import featureCard from '../components/featureCard.vue';
 import { getAllAppUsers } from '../Utils/walletUtils';
 import {chatUser , setUser} from '../Utils/userUtils';
 import { sendMessage, readMessage } from '../Utils/walletUtils';
 import FriendInfo from '../components/friendInfo.vue';
+import FeatureCard from '../components/featureCard.vue';
 
 export default {
   components: { NavBar, infoCards , FriendInfo},
@@ -94,6 +98,9 @@ export default {
   methods: {
     showAllUsers() {
       this.userShown = !this.userShown;
+    },
+    closeUsers() {
+        this.userShown = false;
     } ,
     isSentMessage(message) {
       console.log(message[0]+" "+this.chatUserRef.currentAddress);
@@ -252,7 +259,6 @@ padding: 20px;
   margin-top: 20px;
   font-size: 18px;
 }
- 
 .no-users {
   text-align: center;
   align-items:center;

@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { RouterLink } from 'vue-router';
-import {setUser} from '../Utils/userUtils';
+import { setUser } from '../Utils/userUtils';
 import { defineProps } from 'vue';
 const userName=ref("Gautham Naidu");
 const userAddress=ref("0xd5dE9B5eA158AB77F3F689BC5D156cD62296dCee");
@@ -17,11 +17,15 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['close-users']);
+
 function setUserData() {
   console.log("Setting User Data");
   userName.value=props.username;
   userAddress.value=props.useraddress;
   setUser(userName.value,userAddress.value);
+  emit('close-users');
+
 }
 
 function copyAddress() {
