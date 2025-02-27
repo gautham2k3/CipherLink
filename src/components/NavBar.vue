@@ -6,7 +6,7 @@ import { connectWallet, getUserName } from '../Utils/walletUtils';
 
 export default {
     setup() {
-        const connected = ref(false);
+        let connected = ref(false);
         const walletAddress = ref(null);
         const smallwalletAddress = ref(null);
         const userName = ref("User Not Registered");
@@ -30,12 +30,27 @@ export default {
                 console.log(smallwalletAddress.value);
             }
         };
+        const acDropdown = () => {
+          const dropdown= document.getElementById("myDropdown");
+          if(dropdown) {
+            dropdown.classList.toggle("show");
+          }
+        };
+        const copyAddress = () => {
+          navigator.clipboard.writeText(walletAddress.value);
+        }
+        const disconnectWallet = () => {
+          connected = false;
+        }
         return {
         connected,
         userName,
         walletAddress,
         avatarUrl,
         smallwalletAddress,
+        acDropdown,
+        copyAddress,
+        disconnectWallet,
         connectWallet: handleConnectWallet
         };
     }
@@ -62,9 +77,16 @@ export default {
                 Connect Wallet
             </button>
             <div v-if="connected" class="avatar-container">
-                <img :src="avatarUrl" alt="Avatar" class="avatar" />
+                <img :src="avatarUrl" alt="Avatar" class="avatar" @click="acDropdown()" />
+            </div>
+            <div class="dropdown">
+            <div class="dropdown-content" id="myDropdown">
+              <a href="#" @click="copyAddress()"><i class="fa-solid fa-copy"></i></a>
+              <a href="#" @click="disconnectWallet()"><i class="fa-solid fa-link-slash"></i></a>
+              </div>
             </div>
         </div>
+       
     </nav>
     
 </template>
@@ -84,6 +106,49 @@ export default {
   font-family: monospace, serif;
   letter-spacing: 0.05em;
 }
+.dropdown {
+  float: right;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  cursor: pointer;
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #d5c7c7;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  top: 100%;
+  border-radius : 0px 0px 15px 15px;
+  left: 95%;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 12px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.dropdown-content a:hover {
+  background-color: #fff;
+  border-radius : 0px 0px 15px 15px;
+}
+.show {
+  display: block;
+}
+
 .logo {
   display: flex;
   align-items: center;
