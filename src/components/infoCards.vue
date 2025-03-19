@@ -54,7 +54,7 @@ function copyAddress() {
 .nameCard {
   display: flex;
   background-color: hsla(0, 0%, 100%, 0.2);
-  width: 98%;
+  width: 94%;
   height: auto;
   padding: 10px;
   align-items: center;
@@ -67,8 +67,6 @@ function copyAddress() {
   background-color: hsla(0, 0%, 100%, 0.3);
 }
 
-
-
 .avatar {
   outline: none;
   background-color: transparent;
@@ -78,21 +76,32 @@ function copyAddress() {
 .info {
   display: flex;
   flex-direction: column;
-  align-items:center;
+  align-items: flex-start; 
   color: #00ffb0;
+  width: 65%; 
+  padding: 0 10px; 
+  overflow: hidden; 
 }
 
 .userName {
   font-size: large;
   color:#fff;
+  margin-bottom: 5px;
 }
+
 .userAddress {
   font-size: medium;
-  color:#111010b2
+  color:#b9afaf;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
 }
 
 .userAddress:hover {
   cursor: copy;
+  text-decoration: underline;
 }
 
 .actions button {
@@ -100,10 +109,12 @@ function copyAddress() {
   cursor: pointer;
   align-items: center;
   background-color: #1a18186b;
-  width:auto;
-  height:auto;
+  width:40px;
+  height:40px;
   border: 2px solid #00bcd4;
+  display: flex;
   border-radius: 20px;
+  justify-content: center;
 }
 
 .actions button:hover {
