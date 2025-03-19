@@ -1,7 +1,7 @@
 <template>
 <body>
-  <div class="app-container">
-  <div class="left-container">
+  <div class="reg-app-container">
+  <div class="reg-left-container">
     <div class="solar-system">
     <a href="https://sepolia.etherscan.io/address/0x49C914083314a62B91BB4F7c03d1b6B658F56C27" title="Smart Contract" class="center-image" target="_blank" rel="noopener noreferrer">
       <img src="https://cdn-icons-png.flaticon.com/512/551/551227.png" alt="Center" />
@@ -18,11 +18,11 @@
     </div>
   </div>
   </div>
-  <div v-if="!isBlinking" class="right-container">
-    <button class="Home_button_N" @click="goToHome"><i class="fa-solid fa-circle-arrow-right"></i></button>
-    <h1>Blockchain Chat App</h1>
+  <div v-if="!isBlinking" class="reg-right-container">
+    <button class="Reg_button_N" @click="goToHome"><i class="fa-solid fa-circle-arrow-right"></i></button>
+    <a class="appName" href="#">CipherLink</a>
     <button class="connectButton" @click="connectWallet">Connect Wallet</button>
-    <p class="addressUI" v-if="walletAddress">{{walletAddress}}</p>
+    <p class="addressUI" v-if="walletAddress">{{ walletAddress }}</p>
     <form v-if="walletAddress" @submit.prevent="registerWallet"> 
       <label for="name">Enter your name:</label><br>
       <input type="text" v-model="userName"><br>
@@ -30,22 +30,17 @@
    </form>
   </div>
   <div v-else class="right-gard-container">
-    <!-- <span style="font-size: 78px; color: #fff;" @click="goToHome" class="fade-in">
+    <div class="reg-grid-item">
+      <div class="reg-item-style">
+        <div class="reg-thumb">
+          <span style="font-size: 78px; color: #fff;" @click="goToHome" class="fade-in">
       <i class="fa-regular fa-circle-check"></i>
     </span>
-    <div class="infoContainer">
-      <span>Welcome, {{userName}}!</span><br>
-      <button class="Home_button" @click="goToHome"><i class="fa-solid fa-circle-arrow-right"></i> NEXT</button>
-    </div> -->
-    <div class="grid-item">
-      <div class="item-style">
-        <div class="thumb">
-          <span style="font-size: 78px; color: #fff;" @click="goToHome" class="fade-in">
-             <i class="fa-regular fa-circle-check"></i>
-          </span>
         </div>
-        <div class="nftContent">
-          <h3 class="nftTitle">
+        <div class="reg-nftContent">          
+      <span>Welcome, {{userName}}!</span><br>
+      <button class="Reg_button" @click="goToHome"><i class="fa-solid fa-circle-arrow-right"></i> NEXT</button>
+       <h3 class="reg-nftTitle">
             {{ userName }}
           </h3>
           <h5 class="nftUserAddress">
@@ -62,10 +57,10 @@
                 <i class="fa-solid fa-circle-arrow-right"></i> NEXT
               </span>
             </a>
-          </div>
+          </div> 
         </div>
       </div>
-    </div>
+    </div> 
   </div>
   </div>
 </body>
@@ -111,39 +106,51 @@ body, html {
 }
 
 
-.Home_button {
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.Reg_button {
   margin-top: 10px;
   align-items: center;
   gap: 12px;
   cursor: pointer;
   background: linear-gradient(to right, #75787d, #325378);
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.137);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.137); 
 }
 
-.Home_button_N {
+.Reg_button_N {
   background-color: transparent;
 }
 
 
-.app-container {
+.reg-app-container {
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-.left-container {
+.reg-left-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: 20px;
 }
 
-.right-container {
+.reg-right-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px; 
   font-family: monospace, serif;
   text-align: center;
   letter-spacing: 0.05em;
@@ -154,7 +161,22 @@ body, html {
   100% { opacity: 1; }
 }
 
-.right-gard-container{
+.reg-right-container a {
+  color: white;
+  text-decoration: none;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-left: 0.75rem;
+  font-family: monospace, serif;
+  background: linear-gradient(250deg,#0f33a5,#c2c8db,#78ed36);
+  background-size: 180% 180%;
+  animation: gradient-animation 18s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+.reg-right-gard-container{
   width: 320px;
   margin: 0 auto;
   display: block;
@@ -166,16 +188,16 @@ body, html {
   background: radial-gradient(circle, rgba(153,149,217,1) 0%, rgba(9,9,121,1) 51%, rgba(2,10,11,1) 100%);
   */
 }
-.thumb {
+.reg-thumb {
   width: 100%;
   height: 200px;
   background: rgb(153,149,217);
   background: radial-gradient(circle, rgba(153,149,217,1) 0%, rgba(9,9,121,1) 51%, rgba(2,10,11,1) 100%);
 }
-.grid-item {
+.reg-grid-item {
     width: 100%;
     padding: 0 15px;
-    margin-bottom: 30px;
+    margin-bottom: 30px; 
 }
 /* 
 @media (min-width: 768px) {
@@ -189,33 +211,33 @@ body, html {
     }
 } */
 
-.item-style {
+.reg-item-style {
     background: #20202d;
     border-radius: 10px;
     transition: 0.3s;
 }
-.item-style:hover {
+.reg-item-style:hover {
     box-shadow: rgb(255 255 255 / 25%) 0px 0px 5px 5px;
 }
-.item-style .thumb {
+.reg-item-style .reg-thumb {
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: center; 
     align-items: center;
     border-radius: 10px 10px 0 0;
 }
 
 
-.nftContent {
+.reg-nftContent {
     padding: 15px 20px;
-}
-.nftTitle {
+} 
+.reg-nftTitle {
     font-size: 18px;
     padding: 0;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; 
 }
 .nftTitle a {
     color: #fff;
@@ -228,12 +250,12 @@ body, html {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.nftLastFlex {
-  margin-top: 5px;
+.reg-nftLastFlex {
+  margin-top: 5px; 
   position: relative;
 }
-.d-flex-between {
-    display: flex;
+.reg-d-flex-between{
+  display: flex;
     align-items: center;
     justify-content: space-between;
 }
@@ -282,12 +304,6 @@ body, html {
     transform: scaleX(1);
     transform-origin: left;
     transition: transform 0.7s;
-}
-
-.infoContainer {
-  display: flex;
-  flex-direction: column; 
-  align-items: center; 
 }
 
 
@@ -449,7 +465,7 @@ input {
 }
 
 @media only screen and (max-width: 768px) {
-  .app-container  {
+  .reg-app-container  {
     display:flex;
     flex-direction: column;
   }
