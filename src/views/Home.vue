@@ -13,13 +13,62 @@
           </button>
         </div>
         
-        <div class="search-container">
-          <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search conversations...">
+        <!-- <div class="manual-address-input">
+          <input type="text" placeholder="MANUAL ADDRESS INPUT" class="chatInput" />
+          <div class="action-button" title="Send message to address">
+            <button class="action-button" v-if="checkUserExists(document.querySelector('.chatInput').value)" ">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+            <button class="action-button" v-else disabled title="User not found">
+              <i class="fa-solid fa-user-slash"></i>
+            </button>
           </div>
-        </div>
-        
+        </div> -->
+         <div class="manual-address-input">
+        <input 
+          type="text" 
+          placeholder="Enter wallet address..." 
+          class="chatInput" 
+          v-model="manualAddress"
+          @input="handleAddressChange"
+          @keyup.enter="handleManualAddressSubmit"
+        />
+        <div class="action-button" title="Send message to address">
+          <button 
+            class="action-button" 
+            v-if="isValidAddress && userExists" 
+            @click="handleManualAddressSubmit"
+            :disabled="isCheckingUser"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+                </button>
+                <button 
+                  class="action-button" 
+                  v-else-if="isValidAddress && !userExists && !isCheckingUser" 
+                  disabled 
+                  title="User not found"
+                >
+                  <i class="fa-solid fa-user-slash"></i>
+                </button>
+                <button 
+                  class="action-button" 
+                  v-else-if="isCheckingUser" 
+                  disabled 
+                  title="Checking user..."
+                >
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                </button>
+                <button 
+                  class="action-button" 
+                  v-else 
+                  disabled 
+                  title="Invalid address"
+                >
+                  <i class="fa-solid fa-exclamation-triangle"></i>
+                </button>
+              </div>
+            </div>
+            
         <div class="features-carousel">
           <FeatureCard 
             v-for="feature in features" 
@@ -36,14 +85,14 @@
       <div class="main-content">
         <!-- Chat Header -->
         <div v-if="!userShown && chatUserRef.currentName" class="chat-header">
-          <div class="user-profile">
+          <div class="user-chatprofile">
             <div class="user-avatar">
               <img v-if="chatUserRef.currentName!=''" :src="`https://ui-avatars.com/api/?name=${chatUserRef.currentName}&size=48&rounded=true&bold=true&background=3b82f680&color=fff`" alt="User avatar" />
               <div v-if="chatUserRef.currentName!=''" class="user-status">
                 <span class="status-indicator"></span>
               </div>
             </div>
-            <div class="user-info">
+            <div class="user-chatinfo">
               <h3>{{chatUserRef.currentName}}</h3>
               <p class="user-address">{{ chatUserRef.currentAddress }}</p>
             </div>
@@ -85,14 +134,8 @@
 
         <!-- Message Input -->
         <div v-if="!userShown && chatUserRef.currentName!=''" class="message-composer">
-          <button class="composer-action" title="Attach file">
-            <i class="fa-solid fa-paperclip"></i>
-          </button>
           <div class="message-input-wrapper">
-            <input type="text" placeholder="Type your message..." class="chatInput">
-            <button class="emoji-button" title="Add emoji">
-              <i class="fa-regular fa-face-smile"></i>
-            </button>
+            <input type="text" placeholder="Type your message..." class="msgChatInput">
           </div>
           <button class="send-button" @click="sendMessage">
             <i class="fa-solid fa-paper-plane"></i>
@@ -151,30 +194,9 @@
               <i class="fa-solid fa-star"></i>
               <span>Favorite</span>
             </button>
-            <button class="profile-action">
-              <i class="fa-solid fa-bell"></i>
-              <span>Mute</span>
-            </button>
-            <button class="profile-action">
-              <i class="fa-solid fa-ban"></i>
-              <span>Block</span>
-            </button>
           </div>
         </div>
-        
-        <div class="shared-media">
-          <div class="section-header">
-            <h4>Shared Media</h4>
-            <button class="view-all">View all</button>
-          </div>
-          <div class="media-grid">
-            <div class="empty-media">
-              <i class="fa-regular fa-images"></i>
-              <p>No shared media yet</p>
-            </div>
-          </div>
-        </div>
-        
+                
         <div class="blockchain-info">
           <div class="section-header">
             <h4>Blockchain Details</h4>
@@ -191,7 +213,7 @@
             <span class="info-label">Messages count</span>
             <span class="info-value">{{messages.length}}</span>
           </div>
-          <a href="#" class="view-on-etherscan">
+          <a href="#" @click="openUserDetails" class="view-on-etherscan">
             <i class="fa-solid fa-arrow-up-right-from-square"></i> View on Etherscan
           </a>
         </div>
@@ -204,8 +226,7 @@
 import { onMounted, ref } from 'vue'
 import NavBar from '../components/NavBar.vue';
 import infoCards from '../components/infoCards.vue';
-import featureCard from '../components/featureCard.vue';
-import { getAllAppUsers } from '../Utils/walletUtils';
+import { checkUserExists, getAllAppUsers } from '../Utils/walletUtils';
 import {chatUser , setUser} from '../Utils/userUtils';
 import { sendMessage, readMessage } from '../Utils/walletUtils';
 import FriendInfo from '../components/friendInfo.vue';
@@ -220,6 +241,10 @@ export default {
       chatUserRef: ref(chatUser),
       messages: ref([]),
       sidebarVisible: ref(true),
+      manualAddress: ref(''),
+      userExists: ref(false),
+      isCheckingUser: ref(false),
+      addressCheckTimeout: null,
       features: [
         {
           id: 1,
@@ -241,6 +266,32 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    isValidAddress() {
+      const addressRegex = /^0x[a-fA-F0-9]{40}$/;
+      return addressRegex.test(this.manualAddress.trim());
+    }
+  },
+  watch: {
+    manualAddress: {
+      handler(newAddress) {
+        if (this.addressCheckTimeout) {
+          clearTimeout(this.addressCheckTimeout);
+        }
+        
+        if (this.isValidAddress) {
+          // Debounce user existence check
+          this.addressCheckTimeout = setTimeout(() => {
+            this.checkManualAddressUser(newAddress.trim());
+          }, 500);
+        } else {
+          this.userExists = false;
+          this.isCheckingUser = false;
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     showAllUsers() {
@@ -267,17 +318,90 @@ export default {
       this.sidebarVisible = !this.sidebarVisible;
     },
     async sendMessage() {
-      const messageInput = document.querySelector('.chatInput');
+      const messageInput = document.querySelector('.msgChatInput');
       const message = messageInput.value.trim();
       if (message !== '') {
         await sendMessage(this.chatUserRef.currentAddress, message);
         messageInput.value = ''; 
         this.messages = await readMessage(this.chatUserRef.currentAddress);
+      } else {
+        alert('Please enter a message before sending.');
       }
     },
     async fetchMessages() {
       if (this.chatUserRef.currentAddress) {
         this.messages = await readMessage(this.chatUserRef.currentAddress);
+      }
+    },
+    handleAddressChange() {
+      // This method can be used for additional validation or formatting
+      // The watcher will handle the user existence check
+    },
+    
+    async checkManualAddressUser(address) {
+      if (!address || !this.isValidAddress) {
+        this.userExists = false;
+        this.isCheckingUser = false;
+        return;
+      }
+      
+      try {
+        this.isCheckingUser = true;
+        const exists = await checkUserExists(address);
+        this.userExists = exists;
+      } catch (error) {
+        console.error('Error checking user existence:', error);
+        this.userExists = false;
+      } finally {
+        this.isCheckingUser = false;
+      }
+    },
+    
+    async handleManualAddressSubmit() {
+      const address = this.manualAddress.trim();
+      
+      if (!this.isValidAddress) {
+        alert('Please enter a valid Ethereum address');
+        return;
+      }
+      
+      if (!this.userExists) {
+        alert('User not found. Please make sure the address is registered on the platform.');
+        return;
+      }
+      
+      try {
+        // Find user details from testData
+        const user = this.testData.find(u => 
+          u.accountAddress.toLowerCase() === address.toLowerCase()
+        );
+        
+        if (user) {
+          // Set the chat user using setUser utility
+          setUser(user.name, address);
+          
+          // Update local reference
+          this.chatUserRef.currentName = user.name;
+          this.chatUserRef.currentAddress = address;
+          
+          // Fetch messages for this user
+          await this.fetchMessages();
+          
+          // Clear the manual input
+          this.manualAddress = '';
+          
+          // Hide users list if shown
+          this.userShown = false;
+          
+          console.log(`Started chat with ${user.name} (${address})`);
+        } else {
+          // If user exists but not in our local data, fetch fresh data
+          await this.fetchUsers();
+          setTimeout(() => this.handleManualAddressSubmit(), 500);
+        }
+      } catch (error) {
+        console.error('Error starting chat with manual address:', error);
+        alert('Error starting chat. Please try again.');
       }
     }
   },
@@ -394,43 +518,49 @@ body {
   background: var(--primary);
   transform: translateY(-2px);
 }
+/* Replace or update the manual-address-input related CSS */
 
-.search-container {
-  padding: 16px;
-}
-
-.search-bar {
+.manual-address-input {
   display: flex;
+  width: 100%;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-lg);
-  padding: 10px 16px;
+  border: none;
+  padding: 0px 10px 0px 0px;
+  border-radius: var(--radius-sm);
   transition: all 0.3s ease;
 }
 
-.search-bar:focus-within {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-}
-
-.search-bar i {
-  color: var(--text-muted);
-  margin-right: 10px;
-}
-
-.search-bar input {
+.manual-address-input input {
   flex: 1;
   background: transparent;
   border: none;
   color: var(--text-light);
   font-size: 14px;
   outline: none;
+  width: 100%;
+  margin: 5px 0 5px 0;
 }
 
-.search-bar input::placeholder {
+.manual-address-input input::placeholder {
   color: var(--text-muted);
 }
 
+.manual-address-input:focus-within {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.manual-address-input .action-button {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+
+.manual-address-input:focus-within .action-button {
+  opacity: 1;
+  transform: scale(1);
+}
 .features-carousel {
   overflow-x: hidden;
   width: 100%;
@@ -462,8 +592,12 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.user-profile {
+.user-chatprofile {
   display: flex;
+  align-items: center;
+}
+
+.user-chatinfo {
   align-items: center;
 }
 
@@ -725,6 +859,7 @@ body {
   color: var(--text-light);
   font-size: 15px;
   outline: none;
+  margin-bottom: 0;
 }
 
 .emoji-button {

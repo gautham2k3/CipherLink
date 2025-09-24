@@ -26,7 +26,7 @@
     <form v-if="walletAddress" @submit.prevent="registerWallet"> 
       <label for="name">Enter your name:</label><br>
       <input type="text" v-model="userName"><br>
-      <button v-if="userName" class="registerButton" type="submit">Register</button>
+      <button v-if="checkUserExists(walletAddress) && userName" class="registerButton" type="submit">Register</button>
    </form>
   </div>
   <div v-else class="right-gard-container">
@@ -68,7 +68,7 @@
 
 <script>
 import { ref } from 'vue'
-import { connectWallet, registerWallet } from '../Utils/walletUtils';
+import { checkUserExists, connectWallet, registerWallet } from '../Utils/walletUtils';
 
 export default {
   setup() {
@@ -94,6 +94,15 @@ export default {
     goToHome() {
       this.$router.push('/Home')
     },
+    async checkUserExists() {
+      if (this.walletAddress) {
+        const exists = await checkUserExists(this.walletAddress);
+        if (exists) {
+          this.isBlinking = true;
+          this.$router.push('/Home');
+        }
+      }
+    }
   },
 };
 </script>
