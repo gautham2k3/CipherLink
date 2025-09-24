@@ -277,20 +277,20 @@ const showWalletInstallModal = () => {
           <button class="wallet-option" onclick="window.open('https://metamask.io/download/', '_blank')">
             <div class="wallet-info" style="display:flex; flex-direction:column; align-items:flex-start;">
 			  <div style="display:flex; align-items:center;">
-				<img src="/src/assets/brandAssets/MetaMask-icon-fox.svg" alt="MetaMask" style="width:36px; height:36px; margin-right:10px;"/>
-              	<img src="/src/assets/brandAssets/MetaMask-logo-white.svg" style="height:36px;"/>
+				<img src="/src/assets/MetaMask-icon-fox.svg" alt="MetaMask" style="width:36px; height:36px; margin-right:10px;"/>
+              	<img src="/src/assets/MetaMask-logo-white.svg" alt="" style="height:36px;"/>
 			  </div>
             </div>
           </button>
           <button class="wallet-option" onclick="window.open('https://trustwallet.com/download', '_blank')">
             <div class="wallet-info">
-              <img src="/src/assets/brandAssets/Trust Wallet Core Logo_Green.svg" alt="Trust Wallet" style="width:200px; height:auto; margin-bottom:5px;"/>
+              <img src="/src/assets/Trust Wallet Core Logo_Green.svg" alt="Trust Wallet" style="width:200px; height:auto; margin-bottom:5px;"/>
             </div>
           </button>
           <button class="wallet-option" onclick="window.open('https://walletconnect.network/', '_blank')">
             <div class="wallet-info">
 				<div style="display:flex; align-items:center;">
-					<img src="/src/assets/brandAssets/walletconnect_white.svg" alt="WalletConnect" style="width:200px; height:auto; margin-right:10px;"/>
+					<img src="/src/assets/walletconnect_white.svg" alt="WalletConnect" style="width:200px; height:auto; margin-right:10px;"/>
 				</div>
             </div>
           </button>
