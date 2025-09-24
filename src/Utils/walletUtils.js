@@ -278,7 +278,7 @@ const showWalletInstallModal = () => {
             <div class="wallet-info" style="display:flex; flex-direction:column; align-items:flex-start;">
 			  <div style="display:flex; align-items:center;">
 				<img src="/src/assets/brandAssets/MetaMask-icon-fox.svg" alt="MetaMask" style="width:36px; height:36px; margin-right:10px;"/>
-              	<img src="/src/assets/brandAssets/MetaMask-logo-white.svg" alt="MetaMask" style="height:36px;"/>
+              	<img src="/src/assets/brandAssets/MetaMask-logo-white.svg" style="height:36px;"/>
 			  </div>
             </div>
           </button>
