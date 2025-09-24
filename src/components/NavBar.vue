@@ -3,14 +3,39 @@ import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
 import { connectWallet, getUserName } from '../Utils/walletUtils';
 
-
 export default {
     setup() {
         let connected = ref(false);
+        let mobileMenuOpen = ref(false);
         const walletAddress = ref(null);
         const smallwalletAddress = ref(null);
         const userName = ref("User Not Registered");
         const avatarUrl = ref("https://ui-avatars.com/api/?name=NIL&size=40");
+        
+        const setupWalletListeners = () => {
+            if (window.ethereum) {
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    if (accounts.length === 0) {
+                        console.log('Wallet disconnected');
+                        connected.value = false;
+                        walletAddress.value = null;
+                        smallwalletAddress.value = null;
+                        userName.value = "User Not Registered";
+                        avatarUrl.value = "https://ui-avatars.com/api/?name=NIL&size=40";
+                    } else {
+                        console.log('Account changed to:', accounts[0]);
+                        walletAddress.value = accounts[0];
+                        handleConnectWallet();
+                    }
+                });
+
+                window.ethereum.on('chainChanged', (chainId) => {
+                    console.log('Network changed to:', chainId);
+                    window.location.reload();
+                });
+            }
+        };
+
         const handleConnectWallet = async () => {
             await connectWallet(walletAddress); 
             if (walletAddress.value) {
@@ -30,30 +55,45 @@ export default {
                 console.log(smallwalletAddress.value);
             }
         };
+        
         const acDropdown = () => {
           const dropdown= document.getElementById("myDropdown");
           if(dropdown) {
             dropdown.classList.toggle("show");
           }
         };
+        
         const copyAddress = () => {
-          navigator.clipboard.writeText(walletAddress.value);
+          if (walletAddress.value) {
+            navigator.clipboard.writeText(walletAddress.value);
+          }
         }
+        
         const disconnectWallet = () => {
-          connected = false;
+          connected.value = false;
+          walletAddress.value = null;
+          smallwalletAddress.value = null;
+          userName.value = "User Not Registered";
+          avatarUrl.value = "https://ui-avatars.com/api/?name=NIL&size=40";
         }
+        
         const toggleMobileMenu = () => {
           mobileMenuOpen.value = !mobileMenuOpen.value;
         }
+
+        setupWalletListeners();
+        
         return {
         connected,
         userName,
         walletAddress,
         avatarUrl,
         smallwalletAddress,
+        mobileMenuOpen,
         acDropdown,
         copyAddress,
         disconnectWallet,
+        toggleMobileMenu,
         connectWallet: handleConnectWallet
         };
     }
@@ -87,13 +127,7 @@ export default {
                       <span class="small-wallet-address">{{ smallwalletAddress }}</span>
                   </div>
                   <button v-if="!connected" @click="connectWallet()" class="connect-btn">
-                      <span class="btn-text">Connect Wallet</span>
-                      <span class="btn-icon">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                              <rect x="2" y="5" width="20" height="14" rx="2" />
-                              <line x1="16" y1="12" x2="16" y2="12" />
-                          </svg>
-                      </span>
+                      <span class="text">Connect Wallet</span>
                   </button>
                   <div v-if="connected" class="avatar-container">
                       <img :src="avatarUrl" alt="Avatar" class="avatar" @click="acDropdown()" />
@@ -154,6 +188,7 @@ export default {
   background-size: 180% 180%;
   animation: gradient-animation 18s ease infinite;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 @keyframes gradient-animation {
@@ -252,31 +287,18 @@ export default {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.6);
 }
-
+/* From Uiverse.io by vinodjangid07 */ 
 .connect-btn {
   display: flex;
+  height: max-content;
+  background-color: #1d2129;
+  border-radius: 40px;
+  border: 2px solid #fff;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #00bcd4, #3f51b5);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
 }
 
-.connect-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 188, 212, 0.4);
-}
-
-.connect-btn:active {
-  transform: translateY(1px);
-}
 
 .btn-icon {
   display: flex;
