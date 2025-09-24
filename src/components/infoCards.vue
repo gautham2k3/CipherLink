@@ -1,8 +1,8 @@
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router';
 import { setUser } from '../Utils/userUtils';
-import { defineProps } from 'vue';
+import { addToFavorites, removeFromFavorites, isFavorite } from '../Utils/favoriteUtils'; 
 const userName=ref("Gautham Naidu");
 const userAddress=ref("0xd5dE9B5eA158AB77F3F689BC5D156cD62296dCee");
 
@@ -18,6 +18,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close-users']);
+const isFavorited = ref(isFavorite(props.useraddress));
 
 function setUserData() {
   console.log("Setting User Data");
@@ -31,6 +32,15 @@ function setUserData() {
 function copyAddress() {
   navigator.clipboard.writeText(props.useraddress);
   alert("Copied " + props.useraddress);
+}
+
+function toggleFavorite() {
+  if (isFavorited.value) {
+    removeFromFavorites(props.useraddress);
+  } else {
+    addToFavorites(props.username, props.useraddress);
+  }
+  isFavorited.value = !isFavorited.value;
 }
 
 </script>
