@@ -1,24 +1,36 @@
 <div align="center">
-  <img src="https://i.ibb.co/r4hyX78/Chat-Logo-bc.png" alt="Decentralized Chat App Logo" width="100">  
+  <img src="https://cipherlink-ten.vercel.app/assets/CipherLink-logo.svg" alt="CipherLink Logo" width="100">  
 </div>
 
-<h1 align="center">Blockchain Based Messaging Application</h1>
+<h1 align="center">CipherLink - Blockchain Based Messaging Application</h1>
 
 <p align="center">
-  A secure and transparent chat application built on the blockchain using Vue.js, Vite, and Solidity.
+  A secure and decentralized messaging platform built on blockchain technology using Vue 3, Vite, and Ethereum Smart Contracts.
 </p>
 
-<br>
+<p align="center">
+  <img src="https://img.shields.io/badge/Vue.js-3.0-green.svg" alt="Vue 3" />
+  <img src="https://img.shields.io/badge/Solidity-0.8.0-blue.svg" alt="Solidity" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License" />
+  <a href="https://cipherlink-ten.vercel.app"><img src="https://img.shields.io/badge/Demo-Live-success.svg" alt="Demo" /></a>
+</p>
+
+<p align="center">
+  <a href="https://cipherlink-ten.vercel.app">View Demo</a> •
+  <a href="#features">Features</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#Contributing">Contributing</a>
+</p>
 
 ## Features
 
-* **Decentralized Architecture:** Built on blockchain technology, ensuring data security, transparency, and censorship resistance.
-* **User Registration & Login:** Secure user accounts with blockchain-based authentication.
-* **Contact Management:** Easily add and manage contacts within the application.
-* **Real-time Messaging:** Instant message delivery with end-to-end encryption for privacy.
-* **Cryptocurrency Integration:** Seamless integration with cryptocurrency wallets for transactions and incentives.
-* **End-to-End Encryption:** Messages are encrypted, ensuring only the intended recipients can read them.
-* **Open Source:**  The project's codebase is publicly available, promoting transparency and community contributions.
+* **Wallet Integration:** Connect with MetaMask and other Web3 wallets
+* **Decentralized Messaging:** Direct peer-to-peer messaging via smart contracts
+* **User Profiles:** Create and manage your blockchain identity
+* **Favorites System:** Add frequent contacts to favorites for quick access
+* **Real-time Updates:** Instant message delivery and status updates
+* **Responsive Design:** Seamless experience across all devices
+
 
 ## Technologies Used
 
@@ -26,46 +38,70 @@
 * **Vite:** A build tool that significantly improves the front-end development experience.
 * **Solidity:** A programming language for writing smart contracts on the Ethereum blockchain.
 * **Web3.js:** A library for interacting with the Ethereum blockchain.
-* **IPFS:** A decentralized file storage system for storing and sharing media.
+
 
 ## Getting Started
 
 1. **Clone the repository:**
+```bash
+git clone https://github.com/gautham2k3/CipherLink.git
+cd CipherLink
+```
 
 2. **Install dependencies:**
-3. **Start the development server:**
-4. **Deploy the smart contracts:**
-   - Ensure you have a MetaMask wallet set up and connected to a suitable Ethereum network.
-   - Use a tool like Remix or Hardhat to deploy the `ChatApp.sol` contract.
-   - Update the contract address in your frontend code (`src/App.vue` or similar).
+```bash
+npm install
+```
 
+3. **Start development server:**
+```bash
+npm run dev
+```
 
-## Features
+4. **Build for production:**
+```bash
+npm run build
+```
 
-* **User Account Creation:** Users can create accounts by providing a username.
-* **Messaging:** Users can send messages to other registered users.
-* **Chat History:** Users can view their chat history with other users.
-* **Decentralized Storage:** Messages and user data are stored securely on the blockchain and IPFS.
+## 📝 Smart Contract Functions
 
+The application uses the following smart contract functions:
 
-## Smart Contract Functionality
+* `createAccount(string name)`: Register new user
+* `getUserName()`: Get current user's name
+* `getAllAppUsers()`: List all registered users
+* `sendMessage(address friend_key, string _msg)`: Send message
+* `readMessage(address friend_key)`: Retrieve chat history
+* `checkUserExists(address pubkey)`: Verify user registration
 
-The core functionality of the application is handled by the `ChatApp` smart contract, which includes the following functions:
+## 🔧 Configuration
 
-* **`createAccount(string name)`:** Creates a new user account with the provided name.
-* **`getUserName()`:** Returns the username of the current user.
+The application requires:
+- MetaMask or compatible Web3 wallet
+- Connection to Ethereum network
+- Smart contract deployed and configured
 
-* **`getAllAppUsers()`:** Retrieves a list of all registered users.
-* **`sendMessage(address friend_key, string _msg)`:** Sends a message to the specified friend.
-* **`readMessage(address friend_key)`:** Retrieves the chat history with the specified friend.
+## 🌐 Deployment
+
+The application is configured for deployment on Vercel with the following specifications:
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Framework Preset: Vite
 
 ## Contributing
 
-Contributions are welcome! Please feel free to open issues and pull requests.
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to your branch
+5. Open a Pull Request
 
+## ⚠️ Disclaimer
 
-## Disclaimer
+This project is for demonstration and educational purposes. Use in production environments requires additional security measures and auditing.
 
-This project is for educational purposes only and should not be used in production environments without thorough security audits.
+## 📄 License
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
    
