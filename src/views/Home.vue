@@ -248,19 +248,19 @@ export default {
       features: [
         {
           id: 1,
-          icon: 'src/assets/blockchain.svg',
+          icon: '/assets//blockchain.svg',
           title: 'Blockchain-Powered',
           description: 'Leverages blockchain technology to ensure secure and transparent messaging with immutable records of conversations.'
         },
         {
           id: 2,
-          icon: 'src/assets/decentralized.svg',
+          icon: '/assets//decentralized.svg',
           title: 'Decentralized Architecture',
           description: 'No central server means high availability, censorship resistance, and enhanced privacy for your communications.'
         },
         {
           id: 3,
-          icon: 'src/assets/encryption.svg',
+          icon: '/assets//encryption.svg',
           title: 'End-to-End Encryption',
           description: 'All messages are encrypted using advanced cryptographic algorithms, ensuring only intended recipients can read them.'
         },
